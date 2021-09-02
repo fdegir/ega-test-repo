@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Generate and publish EiffelSourceChangeCreatedEvent
         id: publish-event
-        uses: actions/ega@v24
+        uses: fdegir/ega@v24
         env:
           eiffel_mp: 'eiffelsemantics'
           eiffel_message_type: 'EiffelSourceChangeCreatedEvent'
@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Generate and publish EiffelSourceChangeSubmittedEvent
         id: publish-event
-        uses: actions/ega@v24
+        uses: fdegir/ega@v24
         env:
           eiffel_mp: 'eiffelsemantics'
           eiffel_message_type: 'EiffelSourceChangeSubmittedEvent'
