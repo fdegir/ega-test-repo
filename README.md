@@ -1,1 +1,1 @@
-# ega-test-repo
+# EGA Test Repo
