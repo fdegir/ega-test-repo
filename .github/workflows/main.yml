@@ -1,7 +1,40 @@
-- name: Generate and publish Eiffel Events
-  # You may pin to the exact commit or the version.
-  # uses: fdegir/ega@44ec1b723ccebd268bd99e204b36b46e903b1027
-  uses: fdegir/ega@v24
-  with:
-    # URL to Eiffel REMReM Publish Service
-    remrem_publish_service_url: 'http://188.95.231.225:8096/generateAndPublish'
+name: Publish Eiffel Events
+on:
+  push:
+    tags-ignore:
+      - '*.*'
+
+  pull_request:
+    types: [opened, reopened, closed]
+
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Generate and publish EiffelSourceChangeCreatedEvent for PRs opened or reopened
+  send_escc:
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    runs-on: ubuntu-20.04
+    name: Generate and publish EiffelSourceChangeCreatedEvent
+    steps:
+      - name: Generate and publish EiffelSourceChangeCreatedEvent
+        id: publish-event
+        uses: fdegir/ega@v24
+        env:
+          eiffel_mp: 'eiffelsemantics'
+          eiffel_message_type: 'EiffelSourceChangeCreatedEvent'
+        with:
+          remrem_publish_service_url: 'http://188.95.231.225:8096/generateAndPublish'
+  send_escs:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-20.04
+    name: Generate and publish EiffelSourceChangeSubmittedEvent
+    steps:
+      - name: Generate and publish EiffelSourceChangeSubmittedEvent
+        id: publish-event
+        uses: fdegir/ega@v24
+        env:
+          eiffel_mp: 'eiffelsemantics'
+          eiffel_message_type: 'EiffelSourceChangeSubmittedEvent'
+        with:
+          remrem_publish_service_url: 'http://188.95.231.225:8096/generateAndPublish'
